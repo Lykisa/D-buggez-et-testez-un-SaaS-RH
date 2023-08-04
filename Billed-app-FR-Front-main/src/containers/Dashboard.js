@@ -145,6 +145,7 @@ export default class {
       this.counter ++
     }
 
+    /* [BUG HUNT] - Dashboard */
     const allBills = (filteredBills(bills, getStatus(this.index)))
 
     allBills.forEach(bill => {
