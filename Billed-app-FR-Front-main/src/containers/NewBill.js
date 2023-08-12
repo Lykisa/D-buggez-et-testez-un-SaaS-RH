@@ -17,38 +17,41 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
-    /* [BUG HUNT] - Bills */
+    const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
+    const filePath = e.target.value.split(/\\/g);
+    const fileName = filePath[filePath.length -1];
     const fileExtension = fileName.split('.')[1];
-    if (fileExtension == 'jpg' || 
-        fileExtension == 'jpeg' || 
-        fileExtension == 'png') {
-          const formData = new FormData()
-          const email = JSON.parse(localStorage.getItem("user")).email
-          formData.append('file', file)
-          formData.append('email', email)
-      
-          this.store
-            .bills()
-            .create({
-              data: formData,
-              headers: {
-                noContentType: true
-              }
-            })
-            .then(({fileUrl, key}) => {
-              console.log(fileUrl)
-              this.billId = key
-              this.fileUrl = fileUrl
-              this.fileName = fileName
-            }).catch(error => console.error(error))
-        } else {
-          /* alert ('Le fichier ne correspond pas au format') */
-          const fileError = document.querySelector('.file-error')
-          fileError.innerHTML = 'Le fichier ne correspond pas au format'
-        }
+    const formData = new FormData();
+    const email = JSON.parse(localStorage.getItem("user")).email;
+    formData.append("file", file)
+    formData.append("email", email);
+    /* [BUG HUNT] - Bills */
+    const formats = ["jpg", "jpeg", "png"];
+
+    if (formats.includes(fileExtension)) {
+      this.handleStore(formData, fileName);
+    } else {
+      const fileError = document.querySelector('.file-error')
+      fileError.innerHTML = 'Le fichier ne correspond pas au format'
+    }
+  }  
+    /* Création d'une fonction handleStore qui permet de stocker la note de frais */
+    handleStore(formData, fileName) {
+      this.store
+        .bills()
+        .create({
+          data: formData,
+          headers: {
+            noContentType: true
+          },
+        })
+        .then(({fileUrl, key}) => {
+          console.log(fileUrl)
+          this.billId = key
+          this.fileUrl = fileUrl
+          this.fileName = fileName
+        })
+        .catch(error => console.error(error))
     }
   handleSubmit = e => {
     e.preventDefault()

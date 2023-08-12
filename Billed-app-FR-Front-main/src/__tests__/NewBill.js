@@ -109,9 +109,6 @@ describe("Given I am connected as an employee", () => {
   })
 })
 
-/* const html = NewBillUI()
-document.body.innerHTML = html */
-//to-do write assertion
 
 /* TEST INTEGRATION POST */
 describe("Given I am a user connected as Employee", () => {
